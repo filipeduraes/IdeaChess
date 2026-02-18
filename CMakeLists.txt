@@ -16,6 +16,7 @@ file(
     ${PrivateDirectory}/*.cpp
 )
 
+set(SDL2_DISABLE_SDL2MAIN ON CACHE BOOL "" FORCE)
 add_subdirectory(external/SDL)
 
 add_executable(
@@ -35,5 +36,19 @@ target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
     SDL2
-    SDL2main
+)
+
+target_compile_definitions(
+    ${PROJECT_NAME}
+    PRIVATE
+    SDL_MAIN_HANDLED
+)
+
+
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:SDL2>
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
