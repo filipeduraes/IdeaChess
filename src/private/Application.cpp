@@ -1,4 +1,15 @@
 #include <Application.h>
+#include <memory>
+#include <Renderer.h>
+#include <Vector2Int.h>
+#include <Window.h>
+#include <SDL_timer.h>
+#include <cstdint>
+#include <iostream>
+#include <algorithm>
+#include <SDL.h>
+#include <SDL_events.h>
+#include <Color.h>
 
 Application::Application()
 {
@@ -32,6 +43,16 @@ void Application::Run()
 
         DrawBoard();
 
+        if (window->IsFocused()) 
+        {
+            Vector2Int index = (mousePosition - Vector2Int::One() * GetBorderSize()) / GetCellSize();
+            index.x = std::clamp(index.x, 0, 7);
+            index.y = std::clamp(index.y, 0, 8);
+
+            std::cout << index << '\n';
+            DrawCell(index, Color(0, 100, 255));
+        }
+
         renderer->Render();
         SDL_Delay(1);
     }
@@ -44,6 +65,7 @@ void Application::PollInput()
 
     while (SDL_PollEvent(&event) != 0)
     {
+        mousePosition = Vector2Int(event.motion.x, event.motion.y);
         currentInput.insert(static_cast<SDL_EventType>(event.type));
     }
 }

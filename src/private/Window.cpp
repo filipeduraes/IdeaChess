@@ -1,4 +1,9 @@
 #include <Window.h>
+#include <SDL_mouse.h>
+#include <string>
+#include <Vector2Int.h>
+#include <SDL_video.h>
+#include <Renderer.h>
 
 Window::Window(const std::string& title, Vector2Int size)
     : size(size)
@@ -27,4 +32,9 @@ Renderer Window::CreateRenderer() const
 {
     SDL_Renderer* renderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_ACCELERATED);
     return Renderer(renderer);
+}
+
+bool Window::IsFocused() const
+{
+    return SDL_GetMouseFocus() == sdlWindow;
 }

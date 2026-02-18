@@ -1,12 +1,14 @@
 #pragma once
+
 #include <string>
 #include <unordered_set>
 #include <Color.h>
-#include <SDL.h>
 #include <memory>
 #include <Vector2Int.h>
 #include <Renderer.h>
 #include <Window.h>
+#include <cstdint>
+#include <SDL_events.h>
 
 class Application
 {
@@ -17,6 +19,7 @@ private:
     Color lightCellColor = Colors::White;
     Color darkCellColor = Colors::Black;
 
+    Vector2Int mousePosition;
     std::unique_ptr<Window> window;
     std::unique_ptr<Renderer> renderer;
 

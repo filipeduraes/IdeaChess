@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <ostream>
 
 struct Vector2Int
 {
@@ -36,6 +37,11 @@ public:
         return Vector2Int(x * other, y * other);
     }
 
+    Vector2Int operator /(int32_t other)
+    {
+        return Vector2Int(x / other, y / other);
+    }
+
     Vector2Int operator +(Vector2Int other)
     {
         return Vector2Int(x + other.x, y + other.y);
@@ -51,3 +57,5 @@ public:
         return *this + -other;
     }
 };
+
+std::ostream& operator<<(std::ostream& os, const Vector2Int& vector);

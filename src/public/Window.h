@@ -1,8 +1,8 @@
 #pragma once
-#include <SDL.h>
 #include <string>
 #include <Vector2Int.h>
 #include <Renderer.h>
+#include <SDL_video.h>
 
 class Window
 {
@@ -21,4 +21,6 @@ public:
 
     Vector2Int GetSize() const;
     Renderer CreateRenderer() const;
+
+    bool IsFocused() const;
 };

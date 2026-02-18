@@ -1,7 +1,7 @@
 #pragma once
 #include <Color.h>
-#include <SDL.h>
 #include <Vector2Int.h>
+#include <SDL_render.h>
 
 class Renderer
 {

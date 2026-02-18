@@ -1,4 +1,8 @@
 #include <Renderer.h>
+#include <SDL_render.h>
+#include <Color.h>
+#include <Vector2Int.h>
+#include <SDL_rect.h>
 
 Renderer::Renderer(SDL_Renderer* sdlRenderer)
     : sdlRenderer(sdlRenderer),
