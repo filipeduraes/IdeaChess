@@ -16,12 +16,19 @@ file(
     ${PrivateDirectory}/*.cpp
 )
 
+file(
+    GLOB_RECURSE PublicHeaders
+    CONFIGURE_DEPENDS
+    ${PublicDirectory}/*.h
+)
+
 set(SDL2_DISABLE_SDL2MAIN ON CACHE BOOL "" FORCE)
 add_subdirectory(external/SDL)
 
 add_executable(
     ${PROJECT_NAME}
     ${PrivateSources}
+    ${PublicHeaders}
 )
 
 target_include_directories(
