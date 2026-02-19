@@ -14,6 +14,8 @@
 #include <Rect.h>
 #include <Texture.h>
 #include <vector>
+#include <iostream>
+#include <SDL_mouse.h>
 
 Application::Application()
 {
@@ -78,24 +80,48 @@ void Application::Run()
             break;
         }
 
-        renderer->Clear();
-
-        DrawBoard();
-
-        if (window->IsFocused()) 
-        {
-            Vector2Int index = (mousePosition - GetBorderSize()) / GetCellSize();
-            index.x = std::clamp(index.x, 0, 7);
-            index.y = std::clamp(index.y, 0, 7);
-
-            DrawCell(index, selectionColor);
-        }
-
-        DrawPieces();
-
-        renderer->Render();
+        Render();
         SDL_Delay(1);
     }
+}
+
+void Application::Render()
+{
+    renderer->Clear();
+
+    DrawBoard();
+
+    if (window->IsFocused())
+    {
+        Vector2Int index = (mousePosition - GetBorderSize()) / GetCellSize();
+        index.x = std::clamp(index.x, 0, 7);
+        index.y = std::clamp(index.y, 0, 7);
+
+        DrawCell(index, selectionColor);
+
+        if (hasClicked)
+        {
+            hasClicked = false;
+
+            if (selectedCell.x < 0)
+            {
+                selectedCell = index;
+            }
+            else 
+            {
+                selectedCell = Vector2Int(-1, -1);
+            }
+        }
+
+        if (selectedCell.x >= 0)
+        {
+            DrawCell(selectedCell, clickedColor);
+        }
+    }
+
+    DrawPieces();
+
+    renderer->Render();
 }
 
 void Application::PollInput()
@@ -108,6 +134,8 @@ void Application::PollInput()
         mousePosition = Vector2Int(event.motion.x, event.motion.y);
         currentInput.insert(static_cast<SDL_EventType>(event.type));
         
+        hasClicked = event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT;
+
         bool windowResized = event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED;
 
         if (windowResized)

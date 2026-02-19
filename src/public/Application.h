@@ -46,8 +46,13 @@ private:
     Color darkCellColor = Color(0xe17055);
     Color clearColor = Color(0, 200, 100);
     Color selectionColor = Color(0, 100, 255);
+    Color clickedColor = Color(200, 50, 100);
+
+    Vector2Int selectedCell = Vector2Int(-1, -1);
 
     Vector2Int mousePosition;
+    bool hasClicked = false;
+
     std::vector<PieceData> pieces;
 
     std::unique_ptr<Window> window;
@@ -59,6 +64,8 @@ public:
     ~Application();
 
     void Run();
+    
+    void Render();
     void PollInput();
     void DrawBoard();
     void DrawCell(Vector2Int cellIndex, Color color);
