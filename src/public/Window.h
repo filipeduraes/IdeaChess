@@ -23,4 +23,6 @@ public:
     Renderer CreateRenderer() const;
 
     bool IsFocused() const;
+
+    void UpdateSize();
 };

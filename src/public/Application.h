@@ -18,6 +18,8 @@ private:
     std::unordered_set<SDL_EventType> currentInput;
     Color lightCellColor = Colors::White;
     Color darkCellColor = Colors::Black;
+    Color clearColor = Color(0, 200, 100);
+    Color selectionColor = Color(0, 100, 255);
 
     Vector2Int mousePosition;
     std::unique_ptr<Window> window;
@@ -33,6 +35,6 @@ public:
     void DrawCell(Vector2Int cellIndex, Color color);
 
     int32_t GetCellSize() const;
-    int32_t GetBorderSize() const;
     int32_t GetBoardSize() const;
+    Vector2Int GetBorderSize() const;
 };

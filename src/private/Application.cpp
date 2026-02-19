@@ -5,11 +5,11 @@
 #include <Window.h>
 #include <SDL_timer.h>
 #include <cstdint>
-#include <iostream>
 #include <algorithm>
 #include <SDL.h>
 #include <SDL_events.h>
 #include <Color.h>
+#include <SDL_video.h>
 
 Application::Application()
 {
@@ -29,6 +29,8 @@ Application::~Application()
 
 void Application::Run()
 {
+    renderer->SetClearColor(clearColor);
+
     while (true)
     {
         PollInput();
@@ -38,19 +40,17 @@ void Application::Run()
             break;
         }
 
-        renderer->SetClearColor(Colors::Black);
         renderer->Clear();
 
         DrawBoard();
 
         if (window->IsFocused()) 
         {
-            Vector2Int index = (mousePosition - Vector2Int::One() * GetBorderSize()) / GetCellSize();
+            Vector2Int index = (mousePosition - GetBorderSize()) / GetCellSize();
             index.x = std::clamp(index.x, 0, 7);
-            index.y = std::clamp(index.y, 0, 8);
+            index.y = std::clamp(index.y, 0, 7);
 
-            std::cout << index << '\n';
-            DrawCell(index, Color(0, 100, 255));
+            DrawCell(index, selectionColor);
         }
 
         renderer->Render();
@@ -67,6 +67,13 @@ void Application::PollInput()
     {
         mousePosition = Vector2Int(event.motion.x, event.motion.y);
         currentInput.insert(static_cast<SDL_EventType>(event.type));
+        
+        bool windowResized = event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED;
+
+        if (windowResized)
+        {
+            window->UpdateSize();
+        }
     }
 }
 
@@ -86,28 +93,29 @@ void Application::DrawBoard()
 void Application::DrawCell(Vector2Int cellIndex, Color color)
 {
     Vector2Int cellSize = Vector2Int::One() * GetCellSize();
-    const Vector2Int cellPosition = (Vector2Int::One() * (GetBorderSize() / 2)) + (cellIndex * GetCellSize());
+    const Vector2Int cellPosition = GetBorderSize() + (cellIndex * GetCellSize());
 
     renderer->DrawRect(cellPosition, cellSize, color);
 }
 
 int32_t Application::GetCellSize() const
 {
-    const int32_t windowSize = window->GetSize().x;
+    const int32_t windowSize = std::min(window->GetSize().x, window->GetSize().y);
     const int32_t cellSize = windowSize / 8;
 
     return cellSize;
 }
 
-int32_t Application::GetBorderSize() const
-{
-    const int32_t windowSize = window->GetSize().x;
-    const int32_t border = windowSize - GetCellSize() * 8;
-
-    return border;
-}
-
 int32_t Application::GetBoardSize() const
 {
     return GetCellSize() * 8;
+}
+
+Vector2Int Application::GetBorderSize() const
+{
+    const Vector2Int windowSize = window->GetSize();
+    const int32_t borderWidth = (windowSize.x - GetBoardSize()) / 2;
+    const int32_t borderHeight = (windowSize.y - GetBoardSize()) / 2;
+
+    return Vector2Int(borderWidth, borderHeight);
 }
