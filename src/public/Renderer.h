@@ -2,6 +2,10 @@
 #include <Color.h>
 #include <Vector2Int.h>
 #include <SDL_render.h>
+#include <Texture.h>
+#include <string>
+#include <Rect.h>
+#include <SDL_rect.h>
 
 class Renderer
 {
@@ -22,8 +26,13 @@ public:
     void Render();
     void SetClearColor(Color newClearColor);
     void Clear();
-    void DrawRect(Vector2Int point, Vector2Int size, Color color);
+    void DrawRect(Rect rect, Color color);
+
+    Texture LoadTexture(const std::string& path);
+    void DrawTexture(Texture& texture, Rect source, Rect destination);
 
 private:
     void SetDrawColor(Color color);
+
+    SDL_Rect RectToSdl(const Rect& rect);
 };
