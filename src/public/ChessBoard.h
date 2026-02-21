@@ -34,6 +34,11 @@ struct Piece
     }
 };
 
+struct GameState
+{
+    bool isWhiteTurn = true;
+};
+
 class ChessBoard
 {
 public:
@@ -46,6 +51,7 @@ private:
 
 	const std::string initialPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     Board board = { Piece() };
+    GameState gameState;
 
 public:
     ChessBoard(const Input& input);
@@ -67,6 +73,7 @@ public:
     }
 
 private:
+    bool IsPieceTurn(PieceColor color) const;
     void GenerateMoves(Vector2Int pieceIndex, std::vector<Vector2Int>& moves);
-    Board ParseFenPosition(std::string fenPosition);
+    void ParseFenPosition(std::string fenPosition, Board& outBoard, GameState& outGameState);
 };

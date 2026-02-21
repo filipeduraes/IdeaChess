@@ -3,13 +3,11 @@
 #include <Renderer.h>
 #include <Vector2Int.h>
 #include <Window.h>
-#include <SDL_timer.h>
 #include <SDL.h>
 #include <SDL_events.h>
 #include <SDL_video.h>
 #include <SDL_image.h>
 #include <Input.h>
-#include <cstdint>
 
 Application::~Application()
 {
@@ -32,9 +30,6 @@ void Application::Initialize()
 
 void Application::Run()
 {
-    uint64_t previous = SDL_GetPerformanceCounter();
-    double lag = 0.0;
-
     while (true)
     {
         PollInput();

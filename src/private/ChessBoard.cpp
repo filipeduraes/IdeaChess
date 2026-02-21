@@ -6,12 +6,11 @@
 #include <cstdint>
 #include <vector>
 #include <Input.h>
-#include <algorithm>
 
 ChessBoard::ChessBoard(const Input& input)
 	: input(input)
 {
-	board = ParseFenPosition(initialPosition);
+	ParseFenPosition(initialPosition, board, gameState);
 }
 
 void ChessBoard::Update()
@@ -20,7 +19,9 @@ void ChessBoard::Update()
 	{
 		if (selectedSquare.x < 0)
 		{
-			if (!board[focusedSquare.y][focusedSquare.x].IsEmpty()) 
+			Piece focusedPiece = board[focusedSquare.y][focusedSquare.x];
+
+			if (!focusedPiece.IsEmpty() && IsPieceTurn(focusedPiece.color))
 			{
 				selectedSquare = focusedSquare;
 			}
@@ -29,16 +30,23 @@ void ChessBoard::Update()
 		{
 			board[focusedSquare.y][focusedSquare.x] = board[selectedSquare.y][selectedSquare.x];
 			board[selectedSquare.y][selectedSquare.x] = Piece();
+			gameState.isWhiteTurn = !gameState.isWhiteTurn;
 			selectedSquare = -Vector2Int::One();
 		}
 	}
+}
+
+bool ChessBoard::IsPieceTurn(PieceColor color) const
+{
+	return color == PieceColor::White && gameState.isWhiteTurn 
+		|| color == PieceColor::Black && !gameState.isWhiteTurn;
 }
 
 void ChessBoard::GenerateMoves(Vector2Int pieceIndex, std::vector<Vector2Int>& moves)
 {
 }
 
-ChessBoard::Board ChessBoard::ParseFenPosition(std::string fenPosition)
+void ChessBoard::ParseFenPosition(std::string fenPosition, ChessBoard::Board& outBoard, GameState& outGameState)
 {
 	const std::unordered_map<char, PieceType> pieceMapping =
 	{
@@ -50,19 +58,31 @@ ChessBoard::Board ChessBoard::ParseFenPosition(std::string fenPosition)
 		{'p', PieceType::Pawn}
 	};
 
+	enum class ParseFenStep : uint8_t
+	{
+		Positions = 0,
+		Turn = 1
+	};
+
 	Board parsedBoard;
+	GameState parsedGameState;
+
+	ParseFenStep currentStep = ParseFenStep::Positions;
 	bool isParsingPositions = true;
+	bool isParsingTurn = false;
 	Vector2Int currentIndex = Vector2Int::Zero();
 
 	for (int i = 0; i < fenPosition.size(); i++)
 	{
-		if (isParsingPositions)
+		if (fenPosition[i] == ' ')
 		{
-			if (fenPosition[i] == ' ')
-			{
-				isParsingPositions = false;
-			}
-			else if (fenPosition[i] == '/')
+			currentStep = static_cast<ParseFenStep>(static_cast<uint8_t>(currentStep) + 1);
+			continue;
+		}
+
+		if (currentStep == ParseFenStep::Positions)
+		{
+			if (fenPosition[i] == '/')
 			{
 				currentIndex.x = 0;
 				currentIndex.y++;
@@ -83,9 +103,13 @@ ChessBoard::Board ChessBoard::ParseFenPosition(std::string fenPosition)
 					currentIndex.x += spacing;
 				}
 			}
-
+		}
+		else if (currentStep == ParseFenStep::Turn)
+		{
+			parsedGameState.isWhiteTurn = fenPosition[i] == 'w';
 		}
 	}
 
-	return parsedBoard;
+	outBoard = parsedBoard;
+	outGameState = parsedGameState;
 }
