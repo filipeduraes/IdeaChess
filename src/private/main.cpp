@@ -2,14 +2,23 @@
 #include <ChessBoardView.h>
 #include <Renderer.h>
 #include <Window.h>
+#include <ChessBoard.h>
 
 int main()
 {
     Application application;
-    ChessBoardView view(application.GetInput());
+    ChessBoard board;
+    ChessBoardView view(board, application.GetInput());
 
-    application.GetOnInitializeRender().RegisterCallback([&view](Window* window, Renderer* renderer) { view.InitializeRender(window, renderer); });
-    application.GetOnRender().RegisterCallback([&view]() { view.Render(); });
+    application.GetOnInitializeRender().RegisterCallback([&view](Window* window, Renderer* renderer) 
+    { 
+        view.InitializeRender(window, renderer); 
+    });
+    
+    application.GetOnRender().RegisterCallback([&view]() 
+    { 
+        view.Render(); 
+    });
 
     application.Initialize();
     application.Run();

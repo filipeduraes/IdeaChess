@@ -7,31 +7,8 @@
 #include <Window.h>
 #include <memory>
 #include "Texture.h"
-#include <vector>
 #include "Input.h"
-
-enum class PieceType
-{
-    King = 0,
-    Queen = 1,
-    Bishop = 2,
-    Night = 3,
-    Rook = 4,
-    Pawn = 5
-};
-
-enum class PieceColor
-{
-    White = 0,
-    Black = 1
-};
-
-struct PieceData
-{
-    PieceType type;
-    PieceColor color;
-    Vector2Int index;
-};
+#include "ChessBoard.h"
 
 class ChessBoardView
 {
@@ -45,14 +22,15 @@ private:
     Color clickedColor = Color(200, 50, 100);
 
     const Input& input;
+    const ChessBoard& chessBoard;
+
     Window* window = nullptr;
     Renderer* renderer = nullptr;
 
     std::unique_ptr<Texture> piecesTexture = nullptr;
-    std::vector<PieceData> pieces;
 
 public:
-    ChessBoardView(const Input& input);
+    ChessBoardView(const ChessBoard& chessBoard, const Input& input);
     void InitializeRender(Window* inWindow, Renderer* inRenderer);
 	void Render();
 
@@ -60,7 +38,7 @@ private:
 	void DrawBoard();
 	void DrawCell(Vector2Int cellIndex, Color color);
 	void DrawPieces();
-	void DrawPiece(const PieceData& pieceData);
+    void DrawPiece(const Piece& piece, Vector2Int index);
 
 	Rect GetCellRect(Vector2Int cellIndex) const;
 	int32_t GetCellSize() const;

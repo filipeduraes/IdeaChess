@@ -1,17 +1,21 @@
+#include <array>
+#include <memory>
+#include <cstdint>
+
 #include <ChessBoardView.h>
 #include <Renderer.h>
 #include <Rect.h>
 #include <Window.h>
-#include <memory>
 #include <Texture.h>
 #include <algorithm>
 #include <Input.h>
 #include <Vector2Int.h>
-#include <cstdint>
 #include <Color.h>
+#include <ChessBoard.h>
 
-ChessBoardView::ChessBoardView(const Input& input)
-    : input(input)
+ChessBoardView::ChessBoardView(const ChessBoard& chessBoard, const Input& input)
+    : input(input),
+      chessBoard(chessBoard)
 {
 }
 
@@ -23,33 +27,6 @@ void ChessBoardView::InitializeRender(Window* inWindow, Renderer* inRenderer)
     renderer->SetClearColor(clearColor);
 
     piecesTexture = std::make_unique<Texture>(renderer->LoadTexture("../assets/pieces/pieces.png"));
-
-    pieces =
-    {
-        { PieceType::Rook, PieceColor::Black, {0, 0} },
-        { PieceType::Night, PieceColor::Black, {1, 0} },
-        { PieceType::Bishop, PieceColor::Black, {2, 0} },
-        { PieceType::Queen, PieceColor::Black, {3, 0} },
-        { PieceType::King, PieceColor::Black, {4, 0} },
-        { PieceType::Bishop, PieceColor::Black, {5, 0} },
-        { PieceType::Night, PieceColor::Black, {6, 0} },
-        { PieceType::Rook, PieceColor::Black, {7, 0} },
-
-        { PieceType::Rook, PieceColor::White, {0, 7} },
-        { PieceType::Night, PieceColor::White, {1, 7} },
-        { PieceType::Bishop, PieceColor::White, {2, 7} },
-        { PieceType::Queen, PieceColor::White, {3, 7} },
-        { PieceType::King, PieceColor::White, {4, 7} },
-        { PieceType::Bishop, PieceColor::White, {5, 7} },
-        { PieceType::Night, PieceColor::White, {6, 7} },
-        { PieceType::Rook, PieceColor::White, {7, 7} }
-    };
-
-    for (int i = 0; i < 8; i++)
-    {
-        pieces.push_back({ PieceType::Pawn, PieceColor::Black, {i, 1} });
-        pieces.push_back({ PieceType::Pawn, PieceColor::White, {i, 6} });
-    }
 }
 
 void ChessBoardView::Render()
@@ -109,19 +86,24 @@ void ChessBoardView::DrawCell(Vector2Int cellIndex, Color color)
 
 void ChessBoardView::DrawPieces()
 {
-    for (const PieceData& piece : pieces)
+    const ChessBoard::Board& board = chessBoard.GetBoard();
+
+    for (int y = 0; y < board.size(); y++)
     {
-        DrawPiece(piece);
+        for (int x = 0; x < board[y].size(); x++)
+        {
+            DrawPiece(board[y][x], Vector2Int(x, y));
+        }
     }
 }
 
-void ChessBoardView::DrawPiece(const PieceData& pieceData)
+void ChessBoardView::DrawPiece(const Piece& piece, Vector2Int index)
 {
     int32_t pieceSize = piecesTexture->GetSize().x / 6;
-    Vector2Int sourceOrigin = Vector2Int(static_cast<int32_t>(pieceData.type), static_cast<int32_t>(pieceData.color)) * pieceSize;
+    Vector2Int sourceOrigin = Vector2Int(static_cast<int32_t>(piece.type) - 1, static_cast<int32_t>(piece.color) - 1) * pieceSize;
     Vector2Int sourceSize = { pieceSize, pieceSize };
 
-    renderer->DrawTexture(*piecesTexture, Rect(sourceOrigin, sourceSize), GetCellRect(pieceData.index));
+    renderer->DrawTexture(*piecesTexture, Rect(sourceOrigin, sourceSize), GetCellRect(index));
 }
 
 Rect ChessBoardView::GetCellRect(Vector2Int cellIndex) const
