@@ -4,13 +4,37 @@
 #include <cctype>
 #include <Vector2Int.h>
 #include <cstdint>
+#include <vector>
+#include <Input.h>
+#include <algorithm>
 
-ChessBoard::ChessBoard()
+ChessBoard::ChessBoard(const Input& input)
+	: input(input)
 {
 	board = ParseFenPosition(initialPosition);
 }
 
 void ChessBoard::Update()
+{
+	if (input.IsMouseButtonDown(MouseButton::Left) && focusedSquare.x >= 0)
+	{
+		if (selectedSquare.x < 0)
+		{
+			if (!board[focusedSquare.y][focusedSquare.x].IsEmpty()) 
+			{
+				selectedSquare = focusedSquare;
+			}
+		}
+		else 
+		{
+			board[focusedSquare.y][focusedSquare.x] = board[selectedSquare.y][selectedSquare.x];
+			board[selectedSquare.y][selectedSquare.x] = Piece();
+			selectedSquare = -Vector2Int::One();
+		}
+	}
+}
+
+void ChessBoard::GenerateMoves(Vector2Int pieceIndex, std::vector<Vector2Int>& moves)
 {
 }
 

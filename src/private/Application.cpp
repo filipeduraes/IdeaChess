@@ -33,15 +33,10 @@ void Application::Initialize()
 void Application::Run()
 {
     uint64_t previous = SDL_GetPerformanceCounter();
-    uint64_t lag = 0;
+    double lag = 0.0;
 
     while (true)
     {
-        uint64_t current = SDL_GetPerformanceCounter();
-        uint64_t elapsed = current - previous;
-        previous = current;
-        lag += elapsed;
-
         PollInput();
 
         if (input.GetLastEvent() == EventType::Quit)
@@ -49,12 +44,7 @@ void Application::Run()
             break;
         }
 
-        while (lag / SDL_GetPerformanceFrequency() >= FIXED_UPDATE_MS) 
-        {
-            onUpdate.Invoke();
-            lag -= FIXED_UPDATE_MS;
-        }
-        
+        onUpdate.Invoke();
         onRender.Invoke();
     }
 }

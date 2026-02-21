@@ -13,8 +13,6 @@
 class ChessBoardView
 {
 private:
-    Vector2Int selectedCell = Vector2Int(-1, -1);
-
     Color lightCellColor = Color(0xfab1a0);
     Color darkCellColor = Color(0xe17055);
     Color clearColor = Color(0, 200, 100);
@@ -22,7 +20,7 @@ private:
     Color clickedColor = Color(200, 50, 100);
 
     const Input& input;
-    const ChessBoard& chessBoard;
+    ChessBoard& chessBoard;
 
     Window* window = nullptr;
     Renderer* renderer = nullptr;
@@ -30,7 +28,7 @@ private:
     std::unique_ptr<Texture> piecesTexture = nullptr;
 
 public:
-    ChessBoardView(const ChessBoard& chessBoard, const Input& input);
+    ChessBoardView(ChessBoard& chessBoard, const Input& input);
     void InitializeRender(Window* inWindow, Renderer* inRenderer);
 	void Render();
 

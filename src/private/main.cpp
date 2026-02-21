@@ -7,7 +7,7 @@
 int main()
 {
     Application application;
-    ChessBoard board;
+    ChessBoard board(application.GetInput());
     ChessBoardView view(board, application.GetInput());
 
     application.GetOnInitializeRender().RegisterCallback([&view](Window* window, Renderer* renderer) 
@@ -18,6 +18,11 @@ int main()
     application.GetOnRender().RegisterCallback([&view]() 
     { 
         view.Render(); 
+    });
+
+    application.GetOnUpdate().RegisterCallback([&board]()
+    {
+        board.Update();
     });
 
     application.Initialize();

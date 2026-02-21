@@ -13,7 +13,7 @@
 #include <Color.h>
 #include <ChessBoard.h>
 
-ChessBoardView::ChessBoardView(const ChessBoard& chessBoard, const Input& input)
+ChessBoardView::ChessBoardView(ChessBoard& chessBoard, const Input& input)
     : input(input),
       chessBoard(chessBoard)
 {
@@ -41,24 +41,14 @@ void ChessBoardView::Render()
         index.x = std::clamp(index.x, 0, 7);
         index.y = std::clamp(index.y, 0, 7);
 
-        DrawCell(index, selectionColor);
+        chessBoard.SetFocusedSquareIndex(index);
 
-        if (input.IsMouseButtonDown(MouseButton::Left))
-        {
-            if (selectedCell.x < 0)
-            {
-                selectedCell = index;
-            }
-            else
-            {
-                selectedCell = Vector2Int(-1, -1);
-            }
-        }
+        DrawCell(index, selectionColor);
     }
 
-    if (selectedCell.x >= 0)
+    if (chessBoard.GetSelectedSquare().x >= 0)
     {
-        DrawCell(selectedCell, clickedColor);
+        DrawCell(chessBoard.GetSelectedSquare(), clickedColor);
     }
 
     DrawPieces();

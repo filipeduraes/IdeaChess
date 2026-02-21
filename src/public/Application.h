@@ -11,7 +11,7 @@
 class Application
 {
 private:
-    static const uint64_t FIXED_UPDATE_MS = 2000;
+    const double FIXED_UPDATE_MILLISECONDS = 2;
     const std::string WindowTitle = "Idea Chess";
 
     Event<Window*, Renderer*> onInitializeRenderer;
