@@ -9,6 +9,7 @@
 #include "Texture.h"
 #include "Input.h"
 #include "ChessBoard.h"
+#include "ChessBoardDefinitions.h"
 
 class ChessBoardView
 {
@@ -18,6 +19,7 @@ private:
     Color clearColor = Color(0, 200, 100);
     Color selectionColor = Color(0, 100, 255);
     Color clickedColor = Color(200, 50, 100);
+    Color moveColor = Color(255, 50, 200);
 
     const Input& input;
     ChessBoard& chessBoard;
@@ -36,7 +38,7 @@ private:
 	void DrawBoard();
 	void DrawCell(Vector2Int cellIndex, Color color);
 	void DrawPieces();
-    void DrawPiece(const Piece& piece, Vector2Int index);
+    void DrawPiece(const IdeaChess::Piece& piece, Vector2Int index);
 
 	Rect GetCellRect(Vector2Int cellIndex) const;
 	int32_t GetCellSize() const;

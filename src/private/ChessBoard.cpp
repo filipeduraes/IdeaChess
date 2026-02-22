@@ -4,8 +4,8 @@
 #include <cctype>
 #include <Vector2Int.h>
 #include <cstdint>
-#include <vector>
 #include <Input.h>
+#include <ChessBoardDefinitions.h>
 
 ChessBoard::ChessBoard(const Input& input)
 	: input(input)
@@ -19,43 +19,68 @@ void ChessBoard::Update()
 	{
 		if (selectedSquare.x < 0)
 		{
-			Piece focusedPiece = board[focusedSquare.y][focusedSquare.x];
+			IdeaChess::Piece focusedPiece = board[focusedSquare.y][focusedSquare.x];
 
 			if (!focusedPiece.IsEmpty() && IsPieceTurn(focusedPiece.color))
 			{
-				selectedSquare = focusedSquare;
+				SelectPiece();
 			}
 		}
 		else 
 		{
-			board[focusedSquare.y][focusedSquare.x] = board[selectedSquare.y][selectedSquare.x];
-			board[selectedSquare.y][selectedSquare.x] = Piece();
-			gameState.isWhiteTurn = !gameState.isWhiteTurn;
-			selectedSquare = -Vector2Int::One();
+			if (selectedSquare == focusedSquare)
+			{
+				ResetPieceSelection();
+				return;
+			}
+
+			PerformMovement();
 		}
 	}
 }
 
-bool ChessBoard::IsPieceTurn(PieceColor color) const
+void ChessBoard::ResetPieceSelection()
 {
-	return color == PieceColor::White && gameState.isWhiteTurn 
-		|| color == PieceColor::Black && !gameState.isWhiteTurn;
+	selectedSquare = -Vector2Int::One();
+	selectedPieceMoves.clear();
 }
 
-void ChessBoard::GenerateMoves(Vector2Int pieceIndex, std::vector<Vector2Int>& moves)
+void ChessBoard::SelectPiece()
 {
+	selectedSquare = focusedSquare;
+	pieceMoves.GenerateMoves(selectedSquare, IdeaChess::ChessGame(gameState, board), selectedPieceMoves);
 }
 
-void ChessBoard::ParseFenPosition(std::string fenPosition, ChessBoard::Board& outBoard, GameState& outGameState)
+void ChessBoard::PerformMovement()
 {
-	const std::unordered_map<char, PieceType> pieceMapping =
+	if (!selectedPieceMoves.contains(focusedSquare))
 	{
-		{'r', PieceType::Rook},
-		{'b', PieceType::Bishop},
-		{'n', PieceType::Night},
-		{'k', PieceType::King},
-		{'q', PieceType::Queen},
-		{'p', PieceType::Pawn}
+		ResetPieceSelection();
+		return;
+	}
+
+	board[focusedSquare.y][focusedSquare.x] = board[selectedSquare.y][selectedSquare.x];
+	board[selectedSquare.y][selectedSquare.x] = IdeaChess::Piece();
+	gameState.isWhiteTurn = !gameState.isWhiteTurn;
+	ResetPieceSelection();
+}
+
+bool ChessBoard::IsPieceTurn(IdeaChess::PieceColor color) const
+{
+	return color == IdeaChess::PieceColor::White && gameState.isWhiteTurn
+		|| color == IdeaChess::PieceColor::Black && !gameState.isWhiteTurn;
+}
+
+void ChessBoard::ParseFenPosition(std::string fenPosition, IdeaChess::Board& outBoard, IdeaChess::GameState& outGameState)
+{
+	const std::unordered_map<char, IdeaChess::PieceType> pieceMapping =
+	{
+		{'r', IdeaChess::PieceType::Rook},
+		{'b', IdeaChess::PieceType::Bishop},
+		{'n', IdeaChess::PieceType::Night},
+		{'k', IdeaChess::PieceType::King},
+		{'q', IdeaChess::PieceType::Queen},
+		{'p', IdeaChess::PieceType::Pawn}
 	};
 
 	enum class ParseFenStep : uint8_t
@@ -64,8 +89,8 @@ void ChessBoard::ParseFenPosition(std::string fenPosition, ChessBoard::Board& ou
 		Turn = 1
 	};
 
-	Board parsedBoard;
-	GameState parsedGameState;
+	IdeaChess::Board parsedBoard;
+	IdeaChess::GameState parsedGameState;
 
 	ParseFenStep currentStep = ParseFenStep::Positions;
 	bool isParsingPositions = true;
@@ -92,9 +117,9 @@ void ChessBoard::ParseFenPosition(std::string fenPosition, ChessBoard::Board& ou
 			{
 				if (!std::isdigit(fenPosition[i])) 
 				{
-					PieceColor pieceColor = std::isupper(fenPosition[i]) ? PieceColor::White : PieceColor::Black;
-					PieceType pieceType = pieceMapping.at(std::tolower(fenPosition[i]));
-					parsedBoard[currentIndex.y][currentIndex.x] = Piece(pieceType, pieceColor);
+					IdeaChess::PieceColor pieceColor = std::isupper(fenPosition[i]) ? IdeaChess::PieceColor::White : IdeaChess::PieceColor::Black;
+					IdeaChess::PieceType pieceType = pieceMapping.at(std::tolower(fenPosition[i]));
+					parsedBoard[currentIndex.y][currentIndex.x] = IdeaChess::Piece(pieceType, pieceColor);
 					currentIndex.x++;
 				}
 				else 

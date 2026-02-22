@@ -12,6 +12,7 @@
 #include <Vector2Int.h>
 #include <Color.h>
 #include <ChessBoard.h>
+#include <ChessBoardDefinitions.h>
 
 ChessBoardView::ChessBoardView(ChessBoard& chessBoard, const Input& input)
     : input(input),
@@ -35,6 +36,18 @@ void ChessBoardView::Render()
 
     DrawBoard();
 
+    if (chessBoard.GetSelectedSquare().x >= 0)
+    {
+        DrawCell(chessBoard.GetSelectedSquare(), clickedColor);
+    }
+
+    const IdeaChess::Moves& selectedPieceMoves = chessBoard.GetSelectedPieceMoves();
+
+    for (const Vector2Int& move : selectedPieceMoves)
+    {
+        DrawCell(move, moveColor);
+    }
+
     if (window->IsFocused())
     {
         Vector2Int index = (input.GetMousePosition() - GetBorderSize()) / GetCellSize();
@@ -44,11 +57,6 @@ void ChessBoardView::Render()
         chessBoard.SetFocusedSquareIndex(index);
 
         DrawCell(index, selectionColor);
-    }
-
-    if (chessBoard.GetSelectedSquare().x >= 0)
-    {
-        DrawCell(chessBoard.GetSelectedSquare(), clickedColor);
     }
 
     DrawPieces();
@@ -76,7 +84,7 @@ void ChessBoardView::DrawCell(Vector2Int cellIndex, Color color)
 
 void ChessBoardView::DrawPieces()
 {
-    const ChessBoard::Board& board = chessBoard.GetBoard();
+    const IdeaChess::Board& board = chessBoard.GetBoard();
 
     for (int y = 0; y < board.size(); y++)
     {
@@ -87,7 +95,7 @@ void ChessBoardView::DrawPieces()
     }
 }
 
-void ChessBoardView::DrawPiece(const Piece& piece, Vector2Int index)
+void ChessBoardView::DrawPiece(const IdeaChess::Piece& piece, Vector2Int index)
 {
     int32_t pieceSize = piecesTexture->GetSize().x / 6;
     Vector2Int sourceOrigin = Vector2Int(static_cast<int32_t>(piece.type) - 1, static_cast<int32_t>(piece.color) - 1) * pieceSize;
