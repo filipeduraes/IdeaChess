@@ -1,15 +1,15 @@
 #pragma once
-#include "Vector2Int.h"
-#include "Rect.h"
 #include <cstdint>
-#include "Color.h"
-#include "Renderer.h"
-#include <Window.h>
 #include <memory>
-#include "Texture.h"
-#include "Input.h"
+#include <Window.h>
 #include "ChessBoard.h"
 #include "ChessBoardDefinitions.h"
+#include "Color.h"
+#include "Input.h"
+#include "Rect.h"
+#include "Renderer.h"
+#include "Texture.h"
+#include "Vector2Int.h"
 
 class ChessBoardView
 {
@@ -36,12 +36,12 @@ public:
 
 private:
 	void DrawBoard();
-	void DrawCell(Vector2Int cellIndex, Color color);
+	void DrawCell(const Vector2Int& cellIndex, const Color& color);
 	void DrawPieces();
-    void DrawPiece(const IdeaChess::Piece& piece, Vector2Int index);
+    void DrawPiece(const IdeaChess::Piece& piece, const Vector2Int& index) const;
 
-	Rect GetCellRect(Vector2Int cellIndex) const;
-	int32_t GetCellSize() const;
-	int32_t GetBoardSize() const;
-    Vector2Int GetBorderSize() const;
+	[[nodiscard]] Rect GetCellRect(const Vector2Int& cellIndex) const;
+	[[nodiscard]] int32_t GetCellSize() const;
+	[[nodiscard]] int32_t GetBoardSize() const;
+    [[nodiscard]] Vector2Int GetBorderSize() const;
 };

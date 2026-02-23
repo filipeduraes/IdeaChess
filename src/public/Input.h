@@ -1,9 +1,8 @@
 #pragma once
-#include <SDL_keycode.h>
 #include <SDL_events.h>
-#include <unordered_set>
+#include <SDL_keycode.h>
 #include <unordered_map>
-#include <cstdint>
+#include <unordered_set>
 #include <Vector2Int.h>
 
 enum class KeyCode : uint8_t
@@ -50,14 +49,14 @@ public:
 	void PollInput(const SDL_Event& event);
 	void Cleanup();
 
-	bool IsKeyPressed(KeyCode keyCode) const;
-	bool IsKeyDown(KeyCode keyCode) const;
-	bool IsKeyUp(KeyCode keyCode) const;
-	bool IsMouseButtonPressed(MouseButton mouseButton) const;
-	bool IsMouseButtonDown(MouseButton mouseButton) const;
-	bool IsMouseButtonUp(MouseButton mouseButton) const;
-	Vector2Int GetMousePosition() const;
-	EventType GetLastEvent() const;
+	[[nodiscard]] bool IsKeyPressed(KeyCode keyCode) const;
+	[[nodiscard]] bool IsKeyDown(KeyCode keyCode) const;
+	[[nodiscard]] bool IsKeyUp(KeyCode keyCode) const;
+	[[nodiscard]] bool IsMouseButtonPressed(MouseButton mouseButton) const;
+	[[nodiscard]] bool IsMouseButtonDown(MouseButton mouseButton) const;
+	[[nodiscard]] bool IsMouseButtonUp(MouseButton mouseButton) const;
+	[[nodiscard]] Vector2Int GetMousePosition() const;
+	[[nodiscard]] EventType GetLastEvent() const;
 
 private:
 	void ProcessKeys(const SDL_Event& event);

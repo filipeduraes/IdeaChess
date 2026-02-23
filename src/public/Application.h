@@ -1,12 +1,12 @@
 #pragma once
 
-#include <string>
-#include <memory>
-#include <Renderer.h>
-#include <Window.h>
+#include <cstdint>
 #include <Event.h>
 #include <Input.h>
-#include <cstdint>
+#include <memory>
+#include <Renderer.h>
+#include <string>
+#include <Window.h>
 
 class Application
 {

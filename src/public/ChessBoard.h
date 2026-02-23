@@ -1,9 +1,9 @@
 #pragma once
-#include <string>
-#include "Vector2Int.h"
-#include <Input.h>
-#include <PieceMovements/PieceMoves.h>
 #include <ChessBoardDefinitions.h>
+#include <Input.h>
+#include <string>
+#include <PieceMovements/PieceMoves.h>
+#include "Vector2Int.h"
 
 class ChessBoard
 {
@@ -20,7 +20,7 @@ private:
     PieceMoves pieceMoves;
 
 public:
-    ChessBoard(const Input& input);
+    explicit ChessBoard(const Input& input);
 	void Update();
 
     void SetFocusedSquareIndex(const Vector2Int& index)
@@ -28,7 +28,7 @@ public:
         focusedSquare = index;
     }
 
-    Vector2Int GetSelectedSquare() const
+    [[nodiscard]] Vector2Int GetSelectedSquare() const
     {
         return selectedSquare;
     }
@@ -38,7 +38,7 @@ public:
         return selectedPieceMoves;
     }
 
-    const IdeaChess::Board& GetBoard() const
+    [[nodiscard]] const IdeaChess::Board& GetBoard() const
     {
         return board;
     }
@@ -48,6 +48,7 @@ private:
     void ResetPieceSelection();
     void PerformMovement();
 
-    bool IsPieceTurn(IdeaChess::PieceColor color) const;
-    void ParseFenPosition(std::string fenPosition, IdeaChess::Board& outBoard, IdeaChess::GameState& outGameState);
+    [[nodiscard]] bool IsPieceTurn(IdeaChess::PieceColor color) const;
+
+    static void ParseFenPosition(const std::string& fenPosition, IdeaChess::Board& outBoard, IdeaChess::GameState& outGameState);
 };

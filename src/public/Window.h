@@ -1,8 +1,8 @@
 #pragma once
-#include <string>
-#include <Vector2Int.h>
 #include <Renderer.h>
 #include <SDL_video.h>
+#include <string>
+#include <Vector2Int.h>
 
 class Window
 {
@@ -11,7 +11,7 @@ private:
     Vector2Int size;
 
 public:
-    Window(const std::string& title, Vector2Int size);
+    Window(const std::string& title, const Vector2Int& size);
     Window(Window&& other) noexcept;
 
     ~Window();
@@ -19,10 +19,9 @@ public:
     Window(const Window&) = delete;
     Window& operator =(const Window&) = delete;
 
-    Vector2Int GetSize() const;
-    Renderer CreateRenderer() const;
-
-    bool IsFocused() const;
+    [[nodiscard]] Vector2Int GetSize() const;
+    [[nodiscard]] Renderer CreateRenderer() const;
+    [[nodiscard]] bool IsFocused() const;
 
     void UpdateSize();
 };

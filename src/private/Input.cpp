@@ -1,10 +1,9 @@
 #include "Input.h"
 #include <SDL_events.h>
 #include <SDL_keycode.h>
+#include <SDL_mouse.h>
 #include <unordered_map>
 #include "Vector2Int.h"
-#include <cstdint>
-#include <SDL_mouse.h>
 
 const std::unordered_map<SDL_Keycode, KeyCode> Input::sdlKeysMapping =
 {
@@ -56,17 +55,17 @@ void Input::Cleanup()
 	lastPressedMouseButton = MouseButton::None;
 }
 
-bool Input::IsKeyPressed(KeyCode keyCode) const
+bool Input::IsKeyPressed(const KeyCode keyCode) const
 {
 	return pressedKeys.contains(keyCode);
 }
 
-bool Input::IsKeyDown(KeyCode keyCode) const
+bool Input::IsKeyDown(const KeyCode keyCode) const
 {
 	return eventType == EventType::KeyDown && lastPressedKey == keyCode;
 }
 
-bool Input::IsKeyUp(KeyCode keyCode) const
+bool Input::IsKeyUp(const KeyCode keyCode) const
 {
 	return eventType == EventType::KeyUp && lastPressedKey == keyCode;
 }
@@ -76,12 +75,12 @@ bool Input::IsMouseButtonPressed(MouseButton mouseButton) const
 	return (pressedMouseButton & static_cast<uint8_t>(mouseButton)) != 0;
 }
 
-bool Input::IsMouseButtonDown(MouseButton mouseButton) const
+bool Input::IsMouseButtonDown(const MouseButton mouseButton) const
 {
 	return eventType == EventType::MouseDown && lastPressedMouseButton == mouseButton;
 }
 
-bool Input::IsMouseButtonUp(MouseButton mouseButton) const
+bool Input::IsMouseButtonUp(const MouseButton mouseButton) const
 {
 	return eventType == EventType::MouseUp && lastPressedMouseButton == mouseButton;
 }

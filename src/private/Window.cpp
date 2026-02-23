@@ -1,12 +1,11 @@
-#include <Window.h>
+#include <Renderer.h>
 #include <SDL_mouse.h>
+#include <SDL_video.h>
 #include <string>
 #include <Vector2Int.h>
-#include <Renderer.h>
-#include <SDL_video.h>
-#include <cstdint>
+#include <Window.h>
 
-Window::Window(const std::string& title, Vector2Int size)
+Window::Window(const std::string& title, const Vector2Int& size)
     : size(size)
 {
     sdlWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size.x, size.y, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);

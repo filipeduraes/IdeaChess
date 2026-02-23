@@ -1,4 +1,4 @@
-#include "PieceMovesGenerator.h"
+#include "PieceMovements/PieceMovesGenerator.h"
 #include <Vector2Int.h>
 
 bool PieceMovesGenerator::IsInsideRange(const Vector2Int& pieceIndex)

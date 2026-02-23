@@ -1,11 +1,13 @@
 #pragma once
-#include <Vector2Int.h>
 #include <ChessBoardDefinitions.h>
+#include <Vector2Int.h>
 
 class PieceMovesGenerator
 {
 public:
-	virtual void GenerateMoves(const Vector2Int& pieceIndex, IdeaChess::ChessGame game, IdeaChess::Moves& moves) = 0;
+    virtual ~PieceMovesGenerator() = default;
 
-	bool IsInsideRange(const Vector2Int& pieceIndex);
+    virtual void GenerateMoves(const Vector2Int& pieceIndex, IdeaChess::ChessGame game, IdeaChess::Moves& moves) = 0;
+
+    static bool IsInsideRange(const Vector2Int& pieceIndex);
 };

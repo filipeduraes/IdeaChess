@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
-#include <ostream>
 #include <functional>
+#include <ostream>
 
 struct Vector2Int
 {
@@ -11,7 +11,7 @@ public:
 
     Vector2Int() = default;
 
-    Vector2Int(int32_t x, int32_t y)
+    Vector2Int(const int32_t x, const int32_t y)
         : x(x),
           y(y)
     {
@@ -25,55 +25,55 @@ public:
 
     static Vector2Int One()
     {
-        return Vector2Int(1, 1);
+        return { 1, 1 };
     }
 
     static Vector2Int Up()
     {
-        return Vector2Int(0, 1);
+        return { 0, 1 };
     }
 
     static Vector2Int Down()
     {
-        return Vector2Int(0, -1);
+        return { 0, -1 };
     }
 
     static Vector2Int Right()
     {
-        return Vector2Int(1, 0);
+        return { 1, 0 };
     }
 
     static Vector2Int Left()
     {
-        return Vector2Int(-1, 0);
+        return { -1, 0 };
     }
 
     static Vector2Int Zero()
     {
-        return Vector2Int(0, 0);
+        return { 0, 0 };
     }
 
-    Vector2Int operator *(int32_t other) const
+    Vector2Int operator *(const int32_t other) const
     {
-        return Vector2Int(x * other, y * other);
+        return { x * other, y * other };
     }
 
-    Vector2Int operator /(int32_t other) const
+    Vector2Int operator /(const int32_t other) const
     {
-        return Vector2Int(x / other, y / other);
+        return { x / other, y / other };
     }
 
     Vector2Int operator +(const Vector2Int& other) const
     {
-        return Vector2Int(x + other.x, y + other.y);
+        return { x + other.x, y + other.y };
     }
 
     Vector2Int operator -() const
     {
-        return Vector2Int(-x, -y);
+        return { -x, -y };
     }
 
-    Vector2Int operator -(const Vector2Int& other)
+    Vector2Int operator -(const Vector2Int& other) const
     {
         return *this + -other;
     }
@@ -94,17 +94,14 @@ private:
 
 std::ostream& operator<<(std::ostream& os, const Vector2Int& vector);
 
-namespace std
+template<>
+struct std::hash<Vector2Int>
 {
-    template<>
-    struct hash<Vector2Int>
+    std::size_t operator()(const Vector2Int& vector) const noexcept
     {
-        std::size_t operator()(const Vector2Int& vector) const noexcept
-        {
-            std::uint64_t packed = (static_cast<std::uint64_t>(static_cast<std::uint32_t>(vector.x)) << 32) 
-                                  | static_cast<std::uint32_t>(vector.y);
+        const std::uint64_t packed = static_cast<std::uint64_t>(static_cast<std::uint32_t>(vector.x)) << 32
+                                   | static_cast<std::uint32_t>(vector.y);
 
-            return std::hash<std::uint64_t>{}(packed);
-        }
-    };
-}
+        return std::hash<std::uint64_t>{}(packed);
+    }
+};

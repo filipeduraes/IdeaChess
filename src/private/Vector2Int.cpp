@@ -1,5 +1,5 @@
-#include <Vector2Int.h>
 #include <ostream>
+#include <Vector2Int.h>
 
 std::ostream& operator<<(std::ostream& os, const Vector2Int& vector)
 {

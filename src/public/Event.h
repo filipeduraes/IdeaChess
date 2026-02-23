@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 #include <functional>
 #include <utility>
+#include <vector>
 
 template<typename... TArgs>
 class IEvent
@@ -9,7 +9,6 @@ class IEvent
 public:
     using Callback = std::function<void(TArgs...)>;
 
-public:
     virtual ~IEvent() = default;
     virtual void RegisterCallback(Callback callback) = 0;
 };
@@ -18,7 +17,7 @@ template<typename... TArgs>
 class Event final : public IEvent<TArgs...>
 {
 public:
-    using Callback = typename IEvent<TArgs...>::Callback;
+    using Callback = IEvent<TArgs...>::Callback;
 
 private:
     std::vector<Callback> callbacks;

@@ -1,18 +1,17 @@
 #include <array>
 #include <memory>
-#include <cstdint>
 
-#include <ChessBoardView.h>
-#include <Renderer.h>
-#include <Rect.h>
-#include <Window.h>
-#include <Texture.h>
 #include <algorithm>
-#include <Input.h>
-#include <Vector2Int.h>
-#include <Color.h>
 #include <ChessBoard.h>
 #include <ChessBoardDefinitions.h>
+#include <ChessBoardView.h>
+#include <Color.h>
+#include <Input.h>
+#include <Rect.h>
+#include <Renderer.h>
+#include <Texture.h>
+#include <Vector2Int.h>
+#include <Window.h>
 
 ChessBoardView::ChessBoardView(ChessBoard& chessBoard, const Input& input)
     : input(input),
@@ -71,13 +70,13 @@ void ChessBoardView::DrawBoard()
         for (int32_t x = 0; x < 8; x++)
         {
             const bool isDark = ((x + y) % 2) != 0;
-            Color currentCellColor = isDark ? darkCellColor : lightCellColor;
+            const Color currentCellColor = isDark ? darkCellColor : lightCellColor;
             DrawCell(Vector2Int(x, y), currentCellColor);
         }
     }
 }
 
-void ChessBoardView::DrawCell(Vector2Int cellIndex, Color color)
+void ChessBoardView::DrawCell(const Vector2Int& cellIndex, const Color& color)
 {
     renderer->DrawRect(GetCellRect(cellIndex), color);
 }
@@ -95,20 +94,20 @@ void ChessBoardView::DrawPieces()
     }
 }
 
-void ChessBoardView::DrawPiece(const IdeaChess::Piece& piece, Vector2Int index)
+void ChessBoardView::DrawPiece(const IdeaChess::Piece& piece, const Vector2Int& index) const
 {
-    int32_t pieceSize = piecesTexture->GetSize().x / 6;
-    Vector2Int sourceOrigin = Vector2Int(static_cast<int32_t>(piece.type) - 1, static_cast<int32_t>(piece.color) - 1) * pieceSize;
-    Vector2Int sourceSize = { pieceSize, pieceSize };
+    const int32_t pieceSize = piecesTexture->GetSize().x / 6;
+    const Vector2Int sourceOrigin = Vector2Int(static_cast<int32_t>(piece.type) - 1, static_cast<int32_t>(piece.color) - 1) * pieceSize;
+    const Vector2Int sourceSize = { pieceSize, pieceSize };
 
     renderer->DrawTexture(*piecesTexture, Rect(sourceOrigin, sourceSize), GetCellRect(index));
 }
 
-Rect ChessBoardView::GetCellRect(Vector2Int cellIndex) const
+Rect ChessBoardView::GetCellRect(const Vector2Int& cellIndex) const
 {
-    Vector2Int cellSize = Vector2Int::One() * GetCellSize();
+    const Vector2Int cellSize = Vector2Int::One() * GetCellSize();
     const Vector2Int cellPosition = GetBorderSize() + (cellIndex * GetCellSize());
-    return Rect(cellPosition, cellSize);
+    return { cellPosition, cellSize };
 }
 
 int32_t ChessBoardView::GetCellSize() const
@@ -130,5 +129,5 @@ Vector2Int ChessBoardView::GetBorderSize() const
     const int32_t borderWidth = (windowSize.x - GetBoardSize()) / 2;
     const int32_t borderHeight = (windowSize.y - GetBoardSize()) / 2;
 
-    return Vector2Int(borderWidth, borderHeight);
+    return { borderWidth, borderHeight };
 }

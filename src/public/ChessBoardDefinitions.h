@@ -28,7 +28,7 @@ namespace IdeaChess
         PieceType type = PieceType::None;
         PieceColor color = PieceColor::None;
 
-        bool IsEmpty() const
+        [[nodiscard]] bool IsEmpty() const
         {
             return type == PieceType::None || color == PieceColor::None;
         }

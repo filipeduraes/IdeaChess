@@ -1,12 +1,12 @@
-#include <Renderer.h>
-#include <SDL_render.h>
 #include <Color.h>
-#include <Vector2Int.h>
-#include <SDL_rect.h>
+#include <Rect.h>
+#include <Renderer.h>
 #include <SDL_image.h>
+#include <SDL_rect.h>
+#include <SDL_render.h>
 #include <string>
 #include <Texture.h>
-#include <Rect.h>
+#include <Vector2Int.h>
 
 Renderer::Renderer(SDL_Renderer* sdlRenderer)
     : sdlRenderer(sdlRenderer),
@@ -25,12 +25,12 @@ Renderer::~Renderer()
     SDL_DestroyRenderer(sdlRenderer);
 }
 
-void Renderer::Render()
+void Renderer::Render() const
 {
     SDL_RenderPresent(sdlRenderer);
 }
 
-void Renderer::SetClearColor(Color newClearColor)
+void Renderer::SetClearColor(const Color& newClearColor)
 {
     clearColor = newClearColor;
 }
@@ -41,16 +41,16 @@ void Renderer::Clear()
     SDL_RenderClear(sdlRenderer);
 }
 
-void Renderer::DrawRect(Rect rect, Color color)
+void Renderer::DrawRect(const Rect& rect, const Color& color)
 {
     SetDrawColor(color);
-    SDL_Rect sdlRect = RectToSdl(rect);
+    const SDL_Rect sdlRect = RectToSdl(rect);
     SDL_RenderFillRect(sdlRenderer, &sdlRect);
 }
 
-void Renderer::SetDrawColor(Color color)
+void Renderer::SetDrawColor(const Color& color)
 {
-    if (hasDrawed && lastDrawColor == color)
+    if (hasDrawn && lastDrawColor == color)
     {
         return;
     }
@@ -58,19 +58,19 @@ void Renderer::SetDrawColor(Color color)
     SDL_SetRenderDrawColor(sdlRenderer, color.r, color.g, color.b, color.a);
     lastDrawColor = color;
 
-    hasDrawed = true;
+    hasDrawn = true;
 }
 
-Texture Renderer::LoadTexture(const std::string& path)
+Texture Renderer::LoadTexture(const std::string& path) const
 {
     SDL_Texture* texture = IMG_LoadTexture(sdlRenderer, path.c_str());
     return Texture(texture);
 }
 
-void Renderer::DrawTexture(Texture& texture, Rect source, Rect destination)
+void Renderer::DrawTexture(const Texture& texture, const Rect& source, const Rect& destination) const
 {
-    SDL_Rect sourceRect = RectToSdl(source);
-    SDL_Rect destinationRect = RectToSdl(destination);
+    const SDL_Rect sourceRect = RectToSdl(source);
+    const SDL_Rect destinationRect = RectToSdl(destination);
     SDL_RenderCopy(sdlRenderer, texture.GetSdlTexture(), &sourceRect, &destinationRect);
 }
 

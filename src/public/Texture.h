@@ -9,7 +9,7 @@ private:
 	Vector2Int size = Vector2Int::Zero();
 
 public:
-	Texture(SDL_Texture* sdlTexture);
+	explicit Texture(SDL_Texture* sdlTexture);
 	Texture(Texture&& other) noexcept;
 
 	Texture(const Texture&) = delete;
@@ -17,8 +17,8 @@ public:
 
 	~Texture();
 
-	bool IsLoaded();
-	SDL_Texture* GetSdlTexture();
+	bool IsLoaded() const;
+	SDL_Texture* GetSdlTexture() const;
 
-	Vector2Int GetSize() const;
+	[[nodiscard]] Vector2Int GetSize() const;
 };

@@ -1,10 +1,10 @@
 #pragma once
-#include <PieceMovements/PieceMovesGenerator.h>
-#include <Vector2Int.h>
 #include <ChessBoardDefinitions.h>
+#include <Vector2Int.h>
+#include <PieceMovements/PieceMovesGenerator.h>
 
-class PawnMovesGenerator : public PieceMovesGenerator
+class PawnMovesGenerator final : public PieceMovesGenerator
 {
 public:
-	virtual void GenerateMoves(const Vector2Int& pieceIndex, IdeaChess::ChessGame game, IdeaChess::Moves& moves) override;
+    virtual void GenerateMoves(const Vector2Int& pieceIndex, IdeaChess::ChessGame game, IdeaChess::Moves& moves) override;
 };

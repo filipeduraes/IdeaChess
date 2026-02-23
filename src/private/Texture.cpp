@@ -1,6 +1,5 @@
-#include <Texture.h>
 #include <SDL_render.h>
-#include <cstdint>
+#include <Texture.h>
 #include <Vector2Int.h>
 
 Texture::Texture(SDL_Texture* sdlTexture)
@@ -33,12 +32,12 @@ Texture::~Texture()
 	}
 }
 
-bool Texture::IsLoaded()
+bool Texture::IsLoaded() const
 {
 	return sdlTexture != nullptr;
 }
 
-SDL_Texture* Texture::GetSdlTexture()
+SDL_Texture* Texture::GetSdlTexture() const
 {
 	return sdlTexture;
 }

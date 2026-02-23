@@ -1,11 +1,10 @@
 #include "ChessBoard.h"
+#include <cctype>
+#include <ChessBoardDefinitions.h>
+#include <Input.h>
 #include <string>
 #include <unordered_map>
-#include <cctype>
 #include <Vector2Int.h>
-#include <cstdint>
-#include <Input.h>
-#include <ChessBoardDefinitions.h>
 
 ChessBoard::ChessBoard(const Input& input)
 	: input(input)
@@ -19,7 +18,7 @@ void ChessBoard::Update()
 	{
 		if (selectedSquare.x < 0)
 		{
-			IdeaChess::Piece focusedPiece = board[focusedSquare.y][focusedSquare.x];
+			const IdeaChess::Piece focusedPiece = board[focusedSquare.y][focusedSquare.x];
 
 			if (!focusedPiece.IsEmpty() && IsPieceTurn(focusedPiece.color))
 			{
@@ -65,13 +64,13 @@ void ChessBoard::PerformMovement()
 	ResetPieceSelection();
 }
 
-bool ChessBoard::IsPieceTurn(IdeaChess::PieceColor color) const
+bool ChessBoard::IsPieceTurn(const IdeaChess::PieceColor color) const
 {
 	return color == IdeaChess::PieceColor::White && gameState.isWhiteTurn
 		|| color == IdeaChess::PieceColor::Black && !gameState.isWhiteTurn;
 }
 
-void ChessBoard::ParseFenPosition(std::string fenPosition, IdeaChess::Board& outBoard, IdeaChess::GameState& outGameState)
+void ChessBoard::ParseFenPosition(const std::string& fenPosition, IdeaChess::Board& outBoard, IdeaChess::GameState& outGameState)
 {
 	const std::unordered_map<char, IdeaChess::PieceType> pieceMapping =
 	{
@@ -93,13 +92,11 @@ void ChessBoard::ParseFenPosition(std::string fenPosition, IdeaChess::Board& out
 	IdeaChess::GameState parsedGameState;
 
 	ParseFenStep currentStep = ParseFenStep::Positions;
-	bool isParsingPositions = true;
-	bool isParsingTurn = false;
 	Vector2Int currentIndex = Vector2Int::Zero();
 
-	for (int i = 0; i < fenPosition.size(); i++)
+	for (const char character : fenPosition)
 	{
-		if (fenPosition[i] == ' ')
+		if (character == ' ')
 		{
 			currentStep = static_cast<ParseFenStep>(static_cast<uint8_t>(currentStep) + 1);
 			continue;
@@ -107,31 +104,31 @@ void ChessBoard::ParseFenPosition(std::string fenPosition, IdeaChess::Board& out
 
 		if (currentStep == ParseFenStep::Positions)
 		{
-			if (fenPosition[i] == '/')
+			if (character == '/')
 			{
 				currentIndex.x = 0;
 				currentIndex.y++;
 				continue;
 			}
-			else 
-			{
-				if (!std::isdigit(fenPosition[i])) 
-				{
-					IdeaChess::PieceColor pieceColor = std::isupper(fenPosition[i]) ? IdeaChess::PieceColor::White : IdeaChess::PieceColor::Black;
-					IdeaChess::PieceType pieceType = pieceMapping.at(std::tolower(fenPosition[i]));
-					parsedBoard[currentIndex.y][currentIndex.x] = IdeaChess::Piece(pieceType, pieceColor);
-					currentIndex.x++;
-				}
-				else 
-				{
-					int32_t spacing = fenPosition[i] - '0';
-					currentIndex.x += spacing;
-				}
-			}
-		}
+
+		    if (!std::isdigit(character))
+            {
+                const IdeaChess::PieceColor pieceColor = std::isupper(character) ? IdeaChess::PieceColor::White : IdeaChess::PieceColor::Black;
+		        char lowerCharacter = static_cast<char>(std::tolower(character));
+                const IdeaChess::PieceType pieceType = pieceMapping.at(lowerCharacter);
+
+                parsedBoard[currentIndex.y][currentIndex.x] = IdeaChess::Piece(pieceType, pieceColor);
+                currentIndex.x++;
+            }
+		    else
+            {
+                const int32_t spacing = character - '0';
+                currentIndex.x += spacing;
+            }
+        }
 		else if (currentStep == ParseFenStep::Turn)
 		{
-			parsedGameState.isWhiteTurn = fenPosition[i] == 'w';
+			parsedGameState.isWhiteTurn = character == 'w';
 		}
 	}
 

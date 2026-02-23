@@ -1,13 +1,13 @@
 #include <Application.h>
+#include <Input.h>
 #include <memory>
 #include <Renderer.h>
-#include <Vector2Int.h>
-#include <Window.h>
 #include <SDL.h>
 #include <SDL_events.h>
-#include <SDL_video.h>
 #include <SDL_image.h>
-#include <Input.h>
+#include <SDL_video.h>
+#include <Vector2Int.h>
+#include <Window.h>
 
 Application::~Application()
 {
@@ -53,7 +53,7 @@ void Application::PollInput()
     {
         input.PollInput(event);
 
-        bool windowResized = event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED;
+        const bool windowResized = event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED;
 
         if (windowResized)
         {

@@ -1,8 +1,8 @@
 #include <Application.h>
+#include <ChessBoard.h>
 #include <ChessBoardView.h>
 #include <Renderer.h>
 #include <Window.h>
-#include <ChessBoard.h>
 
 int main()
 {
