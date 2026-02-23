@@ -13,7 +13,7 @@ void PawnMovesGenerator::GenerateMoves(const Vector2Int& pieceIndex, IdeaChess::
 	Vector2Int pawnMoveDirection = isWhitePawn ? Vector2Int::Down() : Vector2Int::Up();
 	Vector2Int pawnFirstMove = pieceIndex + pawnMoveDirection;
 
-	if (game.board[pawnFirstMove.y][pawnFirstMove.x].IsEmpty())
+	if (IsInsideRange(pawnFirstMove) && game.board[pawnFirstMove.y][pawnFirstMove.x].IsEmpty())
 	{
 		moves.insert(pawnFirstMove);
 	}
@@ -22,7 +22,7 @@ void PawnMovesGenerator::GenerateMoves(const Vector2Int& pieceIndex, IdeaChess::
 	{
 		Vector2Int pawnSecondMove = pieceIndex + pawnMoveDirection * 2;
 
-		if (game.board[pawnSecondMove.y][pawnSecondMove.x].IsEmpty())
+		if (IsInsideRange(pawnSecondMove) && game.board[pawnSecondMove.y][pawnSecondMove.x].IsEmpty())
 		{
 			moves.insert(pawnSecondMove);
 		}
@@ -31,12 +31,12 @@ void PawnMovesGenerator::GenerateMoves(const Vector2Int& pieceIndex, IdeaChess::
 	Vector2Int rightCaptureMove = pieceIndex + pawnMoveDirection + Vector2Int::Right();
 	Vector2Int leftCaptureMove = pieceIndex + pawnMoveDirection + Vector2Int::Left();
 
-	if (!game.board[rightCaptureMove.y][rightCaptureMove.x].IsEmpty())
+	if (IsInsideRange(rightCaptureMove) && !game.board[rightCaptureMove.y][rightCaptureMove.x].IsEmpty())
 	{
 		moves.insert(rightCaptureMove);
 	}
 
-	if (!game.board[leftCaptureMove.y][leftCaptureMove.x].IsEmpty())
+	if (IsInsideRange(leftCaptureMove) && !game.board[leftCaptureMove.y][leftCaptureMove.x].IsEmpty())
 	{
 		moves.insert(leftCaptureMove);
 	}

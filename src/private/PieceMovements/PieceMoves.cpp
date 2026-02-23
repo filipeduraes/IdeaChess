@@ -1,8 +1,8 @@
-#include "PieceMoves.h"
+#include "PieceMovements/PieceMoves.h"
 #include <ChessBoardDefinitions.h>
 #include <unordered_map>
-#include "PieceMovesGenerator.h"
-#include "PawnMovesGenerator.h"
+#include "PieceMovements/PieceMovesGenerator.h"
+#include "PieceMovements/PawnMovesGenerator.h"
 #include <Vector2Int.h>
 #include <memory>
 
