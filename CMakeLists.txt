@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
 project(IdeaChess LANGUAGES CXX)
 
@@ -23,6 +24,8 @@ file(
 )
 
 set(SDL2_DISABLE_SDL2MAIN ON CACHE BOOL "" FORCE)
+set(SDL2IMAGE_AVIF OFF CACHE BOOL "" FORCE)
+
 add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_image)
 
