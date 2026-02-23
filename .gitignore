@@ -86,3 +86,5 @@ external/*/build/
 
 *.sln
 *.vcxproj*
+
+.idea/
