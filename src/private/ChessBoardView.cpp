@@ -44,7 +44,14 @@ void ChessBoardView::Render()
 
     for (const Vector2Int& move : selectedPieceMoves)
     {
-        DrawCell(move, moveColor);
+        if (!chessBoard.GetBoard()[move.y][move.x].IsEmpty())
+        {
+            DrawCell(move, captureColor);
+        }
+        else
+        {
+            DrawCell(move, moveColor);
+        }
     }
 
     if (window->IsFocused())

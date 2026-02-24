@@ -8,6 +8,7 @@
 #include "PieceMovements/NightMovesGenerator.h"
 #include "PieceMovements/PawnMovesGenerator.h"
 #include "PieceMovements/PieceMovesGenerator.h"
+#include "PieceMovements/QueenMovesGenerator.h"
 #include "PieceMovements/RookMovesGenerator.h"
 
 PieceMoves::PieceMoves()
@@ -16,6 +17,7 @@ PieceMoves::PieceMoves()
 	generators.emplace(IdeaChess::PieceType::Bishop, std::make_unique<BishopMovesGenerator>());
 	generators.emplace(IdeaChess::PieceType::Night, std::make_unique<NightMovesGenerator>());
 	generators.emplace(IdeaChess::PieceType::Rook, std::make_unique<RookMovesGenerator>());
+	generators.emplace(IdeaChess::PieceType::Queen, std::make_unique<QueenMovesGenerator>());
 }
 
 void PieceMoves::GenerateMoves(const Vector2Int& pieceIndex, const IdeaChess::ChessGame& game, IdeaChess::Moves& outMoves) const

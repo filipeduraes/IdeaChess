@@ -16,10 +16,11 @@ class ChessBoardView
 private:
     Color lightCellColor = Color(0xfab1a0);
     Color darkCellColor = Color(0xe17055);
-    Color clearColor = Color(0, 200, 100);
-    Color selectionColor = Color(0, 100, 255);
-    Color clickedColor = Color(200, 50, 100);
-    Color moveColor = Color(255, 50, 200);
+    Color clearColor = Color(0x58B19F);
+    Color selectionColor = Color(0x1B9CFC);
+    Color clickedColor = Color(0xEAB543);
+    Color moveColor = Color(0xF8EFBA);
+    Color captureColor = Color(0xFC427B);
 
     const Input& input;
     ChessBoard& chessBoard;
