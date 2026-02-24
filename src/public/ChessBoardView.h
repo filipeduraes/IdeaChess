@@ -36,9 +36,9 @@ public:
 	void Render();
 
 private:
-	void DrawBoard();
-	void DrawCell(const Vector2Int& cellIndex, const Color& color);
-	void DrawPieces();
+	void DrawBoard() const;
+	void DrawCell(const Vector2Int& cellIndex, const Color& color) const;
+	void DrawPieces() const;
     void DrawPiece(const IdeaChess::Piece& piece, const Vector2Int& index) const;
 
 	[[nodiscard]] Rect GetCellRect(const Vector2Int& cellIndex) const;

@@ -5,6 +5,7 @@
 #include <Vector2Int.h>
 
 #include "PieceMovements/BishopMovesGenerator.h"
+#include "PieceMovements/KingMovesGenerator.h"
 #include "PieceMovements/NightMovesGenerator.h"
 #include "PieceMovements/PawnMovesGenerator.h"
 #include "PieceMovements/PieceMovesGenerator.h"
@@ -18,6 +19,7 @@ PieceMoves::PieceMoves()
 	generators.emplace(IdeaChess::PieceType::Night, std::make_unique<NightMovesGenerator>());
 	generators.emplace(IdeaChess::PieceType::Rook, std::make_unique<RookMovesGenerator>());
 	generators.emplace(IdeaChess::PieceType::Queen, std::make_unique<QueenMovesGenerator>());
+	generators.emplace(IdeaChess::PieceType::King, std::make_unique<KingMovesGenerator>());
 }
 
 void PieceMoves::GenerateMoves(const Vector2Int& pieceIndex, const IdeaChess::ChessGame& game, IdeaChess::Moves& outMoves) const

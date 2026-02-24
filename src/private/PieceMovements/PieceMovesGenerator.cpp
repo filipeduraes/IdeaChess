@@ -8,6 +8,11 @@ bool PieceMovesGenerator::IsInsideRange(const Vector2Int& pieceIndex)
 
 bool PieceMovesGenerator::IsEmptySquare(const Vector2Int& pieceIndex, const IdeaChess::ChessGame& game)
 {
+    if (!IsInsideRange(pieceIndex))
+    {
+        return false;
+    }
+
     const IdeaChess::Piece& square = game.board[pieceIndex.y][pieceIndex.x];
     return square.IsEmpty();
 }

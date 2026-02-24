@@ -70,7 +70,7 @@ void ChessBoardView::Render()
     renderer->Render();
 }
 
-void ChessBoardView::DrawBoard()
+void ChessBoardView::DrawBoard() const
 {
     for (int32_t y = 0; y < 8; y++)
     {
@@ -83,12 +83,12 @@ void ChessBoardView::DrawBoard()
     }
 }
 
-void ChessBoardView::DrawCell(const Vector2Int& cellIndex, const Color& color)
+void ChessBoardView::DrawCell(const Vector2Int& cellIndex, const Color& color) const
 {
     renderer->DrawRect(GetCellRect(cellIndex), color);
 }
 
-void ChessBoardView::DrawPieces()
+void ChessBoardView::DrawPieces() const
 {
     const IdeaChess::Board& board = chessBoard.GetBoard();
 
