@@ -40,18 +40,16 @@ bool BishopMovesGenerator::EvaluateDirection(const Vector2Int& directionIndex, c
         return false;
     }
 
-    if (!game.board[directionIndex.y][directionIndex.x].IsEmpty())
+    if (IsEmptySquare(directionIndex, game))
     {
-        const bool pieceIsWhite = game.board[directionIndex.y][directionIndex.x].color == IdeaChess::PieceColor::White;
-
-        if (pieceIsWhite != game.state.isWhiteTurn)
-        {
-            moves.insert(directionIndex);
-        }
-
-        return false;
+        moves.insert(directionIndex);
+        return true;
     }
 
-    moves.insert(directionIndex);
-    return true;
+    if (IsCapturablePiece(directionIndex, game))
+    {
+        moves.insert(directionIndex);
+    }
+
+    return false;
 }
