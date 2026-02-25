@@ -5,7 +5,7 @@
 
 namespace IdeaChess 
 {
-    enum class PieceType
+    enum class PieceType : uint8_t
     {
         None = 0,
         King = 1,
@@ -16,11 +16,11 @@ namespace IdeaChess
         Pawn = 6
     };
 
-    enum class PieceColor
+    enum class PieceColor : uint8_t
     {
         None = 0,
-        White = 1,
-        Black = 2
+        White = 1 << 0,
+        Black = 1 << 1
     };
 
     struct Piece
@@ -37,6 +37,39 @@ namespace IdeaChess
     struct GameState
     {
         bool isWhiteTurn = true;
+        Vector2Int availableEnPassantIndex = -Vector2Int::One();
+
+        uint8_t kingSideCastlingAvailable = static_cast<uint8_t>(PieceColor::White)
+                                          | static_cast<uint8_t>(PieceColor::Black);
+
+        uint8_t queenSideCastlingAvailable = static_cast<uint8_t>(PieceColor::White)
+                                           | static_cast<uint8_t>(PieceColor::Black);
+
+        [[nodiscard]] PieceColor GetCurrentColorTurn() const
+        {
+            return isWhiteTurn ? PieceColor::White : PieceColor::Black;
+        }
+
+        bool CanCastle() const
+        {
+            return CanKingCastle() || CanQueenCastle();
+        }
+
+        bool CanKingCastle() const
+        {
+            return (kingSideCastlingAvailable & static_cast<uint8_t>(GetCurrentColorTurn())) != 0;
+        }
+
+        bool CanQueenCastle() const
+        {
+            return (queenSideCastlingAvailable & static_cast<uint8_t>(GetCurrentColorTurn())) != 0;
+        }
+
+        void DisableCastlingForCurrentColor()
+        {
+            queenSideCastlingAvailable &= ~static_cast<uint8_t>(GetCurrentColorTurn());
+            kingSideCastlingAvailable &= ~static_cast<uint8_t>(GetCurrentColorTurn());
+        }
     };
 	
     using Board = std::array<std::array<Piece, 8>, 8>;

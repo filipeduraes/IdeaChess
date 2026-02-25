@@ -20,4 +20,27 @@ void KingMovesGenerator::GenerateMoves(const Vector2Int& pieceIndex, const IdeaC
             }
         }
     }
+
+    if (game.state.CanQueenCastle())
+    {
+        const bool isQueenSideClear = IsEmptySquare(pieceIndex + Vector2Int::Left(), game)
+                                  &&  IsEmptySquare(pieceIndex + Vector2Int::Left() * 2, game)
+                                  &&  IsEmptySquare(pieceIndex + Vector2Int::Left() * 3, game);
+
+        if (isQueenSideClear)
+        {
+            moves.insert(pieceIndex + Vector2Int::Left() * 2);
+        }
+    }
+
+    if (game.state.CanKingCastle())
+    {
+        const bool isKingSideClear = IsEmptySquare(pieceIndex + Vector2Int::Right(), game)
+                                 &&  IsEmptySquare(pieceIndex + Vector2Int::Right() * 2, game);
+
+        if (isKingSideClear)
+        {
+            moves.insert(pieceIndex + Vector2Int::Right() * 2);
+        }
+    }
 }

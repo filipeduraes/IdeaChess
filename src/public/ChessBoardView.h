@@ -33,7 +33,7 @@ private:
 public:
     ChessBoardView(ChessBoard& chessBoard, const Input& input);
     void InitializeRender(Window* inWindow, Renderer* inRenderer);
-	void Render();
+	void Render() const;
 
 private:
 	void DrawBoard() const;

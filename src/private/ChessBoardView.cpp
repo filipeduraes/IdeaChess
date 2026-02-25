@@ -29,7 +29,7 @@ void ChessBoardView::InitializeRender(Window* inWindow, Renderer* inRenderer)
     piecesTexture = std::make_unique<Texture>(renderer->LoadTexture("../assets/pieces/pieces.png"));
 }
 
-void ChessBoardView::Render()
+void ChessBoardView::Render() const
 {
     renderer->Clear();
 

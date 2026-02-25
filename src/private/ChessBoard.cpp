@@ -58,10 +58,55 @@ void ChessBoard::PerformMovement()
 		return;
 	}
 
-	board[focusedSquare.y][focusedSquare.x] = board[selectedSquare.y][selectedSquare.x];
-	board[selectedSquare.y][selectedSquare.x] = IdeaChess::Piece();
+    HandleCastling();
+
+    MovePiece(selectedSquare, focusedSquare);
 	gameState.isWhiteTurn = !gameState.isWhiteTurn;
 	ResetPieceSelection();
+}
+
+void ChessBoard::HandleCastling()
+{
+    const IdeaChess::Piece sourcePiece = board[selectedSquare.y][selectedSquare.x];
+
+    if (gameState.CanCastle())
+    {
+        if (sourcePiece.type == IdeaChess::PieceType::King)
+        {
+            if (selectedSquare.y == focusedSquare.y)
+            {
+                const int32_t sourceToDestination = focusedSquare.x - selectedSquare.x;
+
+                if (sourceToDestination == -2 && gameState.CanQueenCastle())
+                {
+                    MovePiece(Vector2Int(0, selectedSquare.y), Vector2Int(selectedSquare.x - 1, selectedSquare.y)); // Move Rook
+                }
+                else if (sourceToDestination == 2 && gameState.CanKingCastle())
+                {
+                    MovePiece(Vector2Int(7, selectedSquare.y), Vector2Int(selectedSquare.x + 1, selectedSquare.y)); // Move Rook
+                }
+            }
+
+            gameState.DisableCastlingForCurrentColor();
+        }
+        else if (sourcePiece.type == IdeaChess::PieceType::Rook)
+        {
+            if (selectedSquare.x == 0)
+            {
+                gameState.queenSideCastlingAvailable = 0;
+            }
+            else if (selectedSquare.x == 7)
+            {
+                gameState.kingSideCastlingAvailable = 0;
+            }
+        }
+    }
+}
+
+void ChessBoard::MovePiece(const Vector2Int& from, const Vector2Int& to)
+{
+    board[to.y][to.x] = board[from.y][from.x];
+    board[from.y][from.x] = IdeaChess::Piece();
 }
 
 bool ChessBoard::IsPieceTurn(const IdeaChess::PieceColor color) const
@@ -85,14 +130,19 @@ void ChessBoard::ParseFenPosition(const std::string& fenPosition, IdeaChess::Boa
 	enum class ParseFenStep : uint8_t
 	{
 		Positions = 0,
-		Turn = 1
+		Turn = 1,
+	    Castling = 2,
+	    EnPassant = 3
 	};
 
 	IdeaChess::Board parsedBoard;
 	IdeaChess::GameState parsedGameState;
+    parsedGameState.kingSideCastlingAvailable = 0;
+    parsedGameState.queenSideCastlingAvailable = 0;
 
 	ParseFenStep currentStep = ParseFenStep::Positions;
 	Vector2Int currentIndex = Vector2Int::Zero();
+    char enPassantSquareLetter = -1;
 
 	for (const char character : fenPosition)
 	{
@@ -130,6 +180,31 @@ void ChessBoard::ParseFenPosition(const std::string& fenPosition, IdeaChess::Boa
 		{
 			parsedGameState.isWhiteTurn = character == 'w';
 		}
+	    else if (currentStep == ParseFenStep::Castling)
+	    {
+            const IdeaChess::PieceColor sideColor = std::isupper(character) ? IdeaChess::PieceColor::White : IdeaChess::PieceColor::Black;
+		    const char lowerCharacter = static_cast<char>(std::tolower(character));
+
+	        if (lowerCharacter == 'k')
+	        {
+	            parsedGameState.kingSideCastlingAvailable |= static_cast<uint8_t>(sideColor);
+	        }
+	        else
+	        {
+	            parsedGameState.queenSideCastlingAvailable |= static_cast<uint8_t>(sideColor);
+	        }
+	    }
+	    else if (currentStep == ParseFenStep::EnPassant)
+	    {
+            if (!std::isdigit(character))
+            {
+                enPassantSquareLetter = character;
+            }
+	        else
+	        {
+	            parsedGameState.availableEnPassantIndex = Vector2Int(enPassantSquareLetter - 'a', character - '0' - 1);
+	        }
+	    }
 	}
 
 	outBoard = parsedBoard;

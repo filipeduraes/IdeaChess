@@ -12,7 +12,7 @@ private:
     Vector2Int focusedSquare = -Vector2Int::One();
     const Input& input;
 
-	const std::string initialPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	const std::string initialPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq e4 0 1";
     IdeaChess::Board board = { IdeaChess::Piece() };
     IdeaChess::GameState gameState;
     IdeaChess::Moves selectedPieceMoves;
@@ -45,8 +45,12 @@ public:
 
 private:
     void SelectPiece();
+
     void ResetPieceSelection();
     void PerformMovement();
+
+    void HandleCastling();
+    void MovePiece(const Vector2Int& from, const Vector2Int& to);
 
     [[nodiscard]] bool IsPieceTurn(IdeaChess::PieceColor color) const;
 
