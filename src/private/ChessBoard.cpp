@@ -167,14 +167,21 @@ void ChessBoard::ParseFenPosition(const std::string& fenPosition, IdeaChess::Boa
 	ParseFenStep currentStep = ParseFenStep::Positions;
 	Vector2Int currentIndex = Vector2Int::Zero();
     char enPassantSquareLetter = -1;
+    bool isIgnoringWhiteSpace = false;
 
 	for (const char character : fenPosition)
 	{
 		if (character == ' ')
 		{
-			currentStep = static_cast<ParseFenStep>(static_cast<uint8_t>(currentStep) + 1);
+		    if (!isIgnoringWhiteSpace)
+		    {
+		        isIgnoringWhiteSpace = true;
+			    currentStep = static_cast<ParseFenStep>(static_cast<uint8_t>(currentStep) + 1);
+		    }
 			continue;
 		}
+
+	    isIgnoringWhiteSpace = false;
 
 		if (currentStep == ParseFenStep::Positions)
 		{
@@ -213,7 +220,7 @@ void ChessBoard::ParseFenPosition(const std::string& fenPosition, IdeaChess::Boa
 	        {
 	            parsedGameState.kingSideCastlingAvailable |= static_cast<uint8_t>(sideColor);
 	        }
-	        else
+	        else if (lowerCharacter == 'q')
 	        {
 	            parsedGameState.queenSideCastlingAvailable |= static_cast<uint8_t>(sideColor);
 	        }
@@ -226,7 +233,7 @@ void ChessBoard::ParseFenPosition(const std::string& fenPosition, IdeaChess::Boa
             }
 	        else
 	        {
-	            parsedGameState.availableEnPassantIndex = Vector2Int(enPassantSquareLetter - 'a', 8 - character - '0');
+	            parsedGameState.availableEnPassantIndex = Vector2Int(enPassantSquareLetter - 'a', 8 - (character - '0'));
 	        }
 	    }
 	}
