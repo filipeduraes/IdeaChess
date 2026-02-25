@@ -50,6 +50,7 @@ private:
     void PerformMovement();
 
     void HandleCastling();
+    void HandleEnPassant();
     void MovePiece(const Vector2Int& from, const Vector2Int& to);
 
     [[nodiscard]] bool IsPieceTurn(IdeaChess::PieceColor color) const;

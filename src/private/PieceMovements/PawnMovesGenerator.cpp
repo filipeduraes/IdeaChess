@@ -31,12 +31,12 @@ void PawnMovesGenerator::GenerateMoves(const Vector2Int& pieceIndex, const IdeaC
 	const Vector2Int rightCaptureMove = pieceIndex + pawnMoveDirection + Vector2Int::Right();
 	const Vector2Int leftCaptureMove = pieceIndex + pawnMoveDirection + Vector2Int::Left();
 
-	if (IsCapturablePiece(rightCaptureMove, game))
+	if (IsCapturablePiece(rightCaptureMove, game) || rightCaptureMove == game.state.availableEnPassantIndex)
 	{
 		moves.insert(rightCaptureMove);
 	}
 
-	if (IsCapturablePiece(leftCaptureMove, game))
+	if (IsCapturablePiece(leftCaptureMove, game) || leftCaptureMove == game.state.availableEnPassantIndex)
 	{
 		moves.insert(leftCaptureMove);
 	}

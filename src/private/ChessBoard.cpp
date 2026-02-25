@@ -59,6 +59,7 @@ void ChessBoard::PerformMovement()
 	}
 
     HandleCastling();
+    HandleEnPassant();
 
     MovePiece(selectedSquare, focusedSquare);
 	gameState.isWhiteTurn = !gameState.isWhiteTurn;
@@ -101,6 +102,29 @@ void ChessBoard::HandleCastling()
             }
         }
     }
+}
+
+void ChessBoard::HandleEnPassant()
+{
+    const IdeaChess::Piece sourcePiece = board[selectedSquare.y][selectedSquare.x];
+
+    if (sourcePiece.type == IdeaChess::PieceType::Pawn)
+    {
+        const int32_t enPassantPieceDisplacement = gameState.isWhiteTurn ? 1 : -1;
+
+        if (focusedSquare == gameState.availableEnPassantIndex) //Handle active en passant capture
+        {
+            board[gameState.availableEnPassantIndex.y + enPassantPieceDisplacement][gameState.availableEnPassantIndex.x] = IdeaChess::Piece();
+            gameState.availableEnPassantIndex = -Vector2Int::One();
+        }
+        else if (std::abs(focusedSquare.y - selectedSquare.y) == 2) //Handle new en passant candidate
+        {
+            gameState.availableEnPassantIndex = selectedSquare + Vector2Int::Down() * enPassantPieceDisplacement;
+            return;
+        }
+    }
+
+    gameState.availableEnPassantIndex = -Vector2Int::One();
 }
 
 void ChessBoard::MovePiece(const Vector2Int& from, const Vector2Int& to)
@@ -202,7 +226,7 @@ void ChessBoard::ParseFenPosition(const std::string& fenPosition, IdeaChess::Boa
             }
 	        else
 	        {
-	            parsedGameState.availableEnPassantIndex = Vector2Int(enPassantSquareLetter - 'a', character - '0' - 1);
+	            parsedGameState.availableEnPassantIndex = Vector2Int(enPassantSquareLetter - 'a', 8 - character - '0');
 	        }
 	    }
 	}
